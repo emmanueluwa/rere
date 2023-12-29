@@ -5,6 +5,7 @@ import "./App.css";
 import Influencer from "./components/Influencer";
 
 function App() {
+  const [role, setRole] = useState("pet food");
   const showInfluencers = true;
 
   return (
@@ -17,7 +18,22 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div> */}
-      {showInfluencers ? <Influencer /> : <p>Influencers hidden</p>}
+      {showInfluencers ? (
+        <div>
+          <input
+            type="text"
+            onChange={(e) => {
+              console.log(e.target.value);
+              setRole(e.target.value);
+            }}
+          />
+          <Influencer name="fulo" role="builder" />
+          <Influencer name="usman" />
+          <Influencer name="esa" role={role} />
+        </div>
+      ) : (
+        <p>Influencers hidden</p>
+      )}
     </>
   );
 }
