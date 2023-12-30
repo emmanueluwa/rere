@@ -4,6 +4,7 @@ import viteLogo from "/vite.svg";
 import "./index.css";
 import Influencer from "./components/Influencer";
 import { v4 as uuidv4 } from "uuid";
+import Addfluencer from "./components/AddInfluencer";
 
 function App() {
   const [role, setRole] = useState("pet food");
@@ -56,7 +57,7 @@ function App() {
   const showInfluencers = true;
 
   /* 
-  defining function for updating influencer to be sent to => Influencer.jsx => EditInfluencer.jsx
+  defining function for updating influencer to be passed as property to => Influencer.jsx => EditInfluencer.jsx
   */
   function updateInfluencer(id, newName, newRole) {
     const updatedInfluencers = influencers.map((influencer) => {
@@ -66,6 +67,19 @@ function App() {
       return influencer;
     });
     setInfluencers(updatedInfluencers);
+  }
+
+  /* 
+  defining function for adding new influencer to be passed as property to => AddInfluencer.jsx
+  */
+  function addInfluencer(name, role, img) {
+    const newInfluencer = {
+      id: uuidv4(),
+      name: name,
+      role: role,
+      img: img,
+    };
+    setInfluencers([...influencers, newInfluencer]);
   }
 
   return (
@@ -101,6 +115,7 @@ function App() {
               );
             })}
           </div>
+          <Addfluencer addInfluencer={addInfluencer} />
         </div>
       ) : (
         <p>Influencers hidden</p>
