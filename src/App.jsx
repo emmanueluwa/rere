@@ -5,6 +5,8 @@ import "./index.css";
 import Influencer from "./components/Influencer";
 import { v4 as uuidv4 } from "uuid";
 import Addfluencer from "./components/AddInfluencer";
+import EditInfluencer from "./components/EditInfluencer";
+import Header from "./components/Header";
 
 function App() {
   const [role, setRole] = useState("pet food");
@@ -83,7 +85,7 @@ function App() {
   }
 
   return (
-    <>
+    <div className="bg-gray-300 min-h-screen ">
       {/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -92,17 +94,19 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div> */}
+      <Header />
       {showInfluencers ? (
         <div>
-          <input
-            type="text"
-            onChange={(e) => {
-              console.log(e.target.value);
-              setRole(e.target.value);
-            }}
-          />
           <div className="flex flex-wrap justify-center">
             {influencers.map((influencer) => {
+              const editInfluencer = (
+                <EditInfluencer
+                  id={influencer.id}
+                  name={influencer.name}
+                  role={influencer.role}
+                  updateInfluencer={updateInfluencer}
+                />
+              );
               return (
                 <Influencer
                   key={influencer.id}
@@ -110,7 +114,7 @@ function App() {
                   name={influencer.name}
                   role={influencer.role}
                   img={influencer.img}
-                  updateInfluencer={updateInfluencer}
+                  editInfluencer={editInfluencer}
                 />
               );
             })}
@@ -120,7 +124,7 @@ function App() {
       ) : (
         <p>Influencers hidden</p>
       )}
-    </>
+    </div>
   );
 }
 

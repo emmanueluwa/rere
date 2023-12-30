@@ -14,12 +14,7 @@ function Influencer(props) {
           <p className="text-slate-500 font-medium">{props.role}</p>
         </div>
 
-        <EditInfluencer
-          id={props.id}
-          name={props.name}
-          role={props.role}
-          updateInfluencer={props.updateInfluencer}
-        />
+        {props.editInfluencer}
       </div>
     </div>
   );
