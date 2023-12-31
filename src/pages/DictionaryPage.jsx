@@ -21,20 +21,23 @@ export default function DictionaryPage() {
   // }, [word]);
 
   return (
-    <>
+    <form
+      className="flex justify-center space-x-2 max-w-[300px]"
+      onSubmit={() => {
+        navigate("/definition/" + word);
+      }}
+    >
       <input
+        className="px-2 rounded py-1 shrink min-w-0"
+        placeholder="definition"
         type="text"
         onChange={(e) => {
           setWord(e.target.value);
         }}
       />
-      <button
-        onClick={() => {
-          navigate("/definition/" + word, { replace: true });
-        }}
-      >
+      <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded">
         Search
       </button>
-    </>
+    </form>
   );
 }
