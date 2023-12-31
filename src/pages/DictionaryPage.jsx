@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 /* 
 USE LLM TO GIVE ADVICE ON SPECIFIC SAAS INDUSTRY
@@ -6,7 +7,8 @@ USE LLM TO GIVE ADVICE ON SPECIFIC SAAS INDUSTRY
 
 export default function DictionaryPage() {
   const [word, setWord] = useState("");
-  const [word2, setWord2] = useState("");
+
+  const navigate = useNavigate();
 
   /*
   useEffect
@@ -14,13 +16,9 @@ export default function DictionaryPage() {
   - callback function, function passed into another function
   - dependency array
   */
-  useEffect(() => {
-    console.log("State updated", word);
-  }, [word]);
-
-  useEffect(() => {
-    console.log("State updated", word2);
-  }, [word2]);
+  // useEffect(() => {
+  //   console.log("State updated", word);
+  // }, [word]);
 
   return (
     <>
@@ -30,15 +28,13 @@ export default function DictionaryPage() {
           setWord(e.target.value);
         }}
       />
-      <h2>get the definition of {word}</h2>
-
-      <input
-        type="text"
-        onChange={(e) => {
-          setWord2(e.target.value);
+      <button
+        onClick={() => {
+          navigate("/definition/" + word, { replace: true });
         }}
-      />
-      <h2>get the definition of {word2}</h2>
+      >
+        Search
+      </button>
     </>
   );
 }
