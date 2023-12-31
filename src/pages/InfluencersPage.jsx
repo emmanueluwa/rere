@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import Addfluencer from "../components/AddInfluencer";
 import EditInfluencer from "../components/EditInfluencer";
 
-function Influencers() {
+function InfluencersPage() {
   const [influencers, setInfluencers] = useState([
     {
       id: 1,
@@ -80,7 +80,7 @@ function Influencers() {
   }
 
   return (
-    <div className="bg-gray-300 min-h-screen ">
+    <div className="">
       {showInfluencers ? (
         <div>
           <div className="flex flex-wrap justify-center">
@@ -114,4 +114,4 @@ function Influencers() {
   );
 }
 
-export default Influencers;
+export default InfluencersPage;

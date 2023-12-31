@@ -1,5 +1,5 @@
 import "./index.css";
-import Influencers from "./pages/Influencers";
+import InfluencersPage from "./pages/InfluencersPage";
 import Header from "./components/Header";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Header>
         <Routes>
-          <Route path="/influencers" element={<Influencers />} />
+          <Route path="/influencers" element={<InfluencersPage />} />
         </Routes>
       </Header>
     </BrowserRouter>
