@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 export default function DefinitionPage() {
   const [word, setWord] = useState([]);
 
+  /*
+  destructure, give an object to component
+  */
+  console.log(useParams());
+  let { search } = useParams();
+
   useEffect(() => {
-    fetch("https://api.dictionaryapi.dev/api/v2/entries/en/fear")
+    fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + search)
       .then((res) => res.json())
       .then((data) => {
         setWord(data[0].meanings);

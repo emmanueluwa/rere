@@ -13,7 +13,9 @@ function App() {
         <Routes>
           <Route path="/influencers" element={<InfluencersPage />} />
           <Route path="/dictionary" element={<DictionaryPage />} />
-          <Route path="/definition" element={<DefinitionPage />} />
+          <Route path="/dictionary" element={<DictionaryPage />} />
+
+          <Route path="/definition/:search" element={<DefinitionPage />} />
         </Routes>
       </Header>
     </BrowserRouter>
