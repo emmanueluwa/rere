@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import NotFoundPage from "./NotFoundPage";
+import DefinitionSearch from "../components/DefinitionSearch";
 
 export default function DefinitionPage() {
   const [word, setWord] = useState([]);
@@ -68,6 +69,8 @@ export default function DefinitionPage() {
               </p>
             );
           })}
+          <p>Search for another word: </p>
+          <DefinitionSearch />
         </>
       ) : null}
     </>
