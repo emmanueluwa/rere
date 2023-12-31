@@ -45,14 +45,19 @@ export default function DefinitionPage() {
   }, []);
 
   if (notFound) {
-    return <NotFoundPage />;
+    return (
+      <>
+        <p>The word you entered is not available</p>
+        <Link to="/dictionary">Search another word</Link>
+      </>
+    );
   }
 
   if (error) {
     return (
       <>
         <p>Something went wrong...</p>
-        <NotFoundPage />
+        <Link to="/dictionary">Search another word</Link>
       </>
     );
   }
