@@ -5,10 +5,20 @@ import NotFoundPage from "./NotFoundPage";
 
 export default function CustomerPage() {
   const { id } = useParams();
+
   const [customer, setCustomer] = useState([]);
+  //using a copy of the customer to update the customer data
+  const [tempCustomer, setTempCustomer] = useState([]);
 
   const navigate = useNavigate();
   const [notFound, setNotFound] = useState(false);
+  const [changed, setChanged] = useState(false);
+
+  useEffect(() => {
+    console.log("cus", customer);
+    console.log("tcus", tempCustomer);
+    console.log("changed??:)", changed);
+  });
 
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
@@ -24,6 +34,7 @@ export default function CustomerPage() {
       })
       .then((data) => {
         setCustomer(data.customer);
+        setTempCustomer(data.customer);
       });
   }, []);
 
@@ -32,9 +43,40 @@ export default function CustomerPage() {
       {/* {notFound ? <NotFoundPage /> : null} */}
       {customer ? (
         <div>
-          <p>{customer.id}</p>
-          <p>{customer.name}</p>
-          <p>{customer.industry}</p>
+          {/* <p className="m-2 block px-2">{tempCustomer.id}</p> */}
+
+          <input
+            className="m-2 block px-2"
+            type="text"
+            value={tempCustomer.name}
+            onChange={(e) => {
+              setChanged(true);
+              setTempCustomer({ ...tempCustomer, name: e.target.value });
+            }}
+          />
+          <input
+            className="m-2 block px-2"
+            type="text"
+            value={tempCustomer.industry}
+            onChange={(e) => {
+              setChanged(true);
+              setTempCustomer({ ...tempCustomer, industry: e.target.value });
+            }}
+          />
+          {changed ? (
+            <>
+              <button
+                className=""
+                onClick={(e) => {
+                  setTempCustomer({ ...customer });
+                  setChanged(false);
+                }}
+              >
+                Cancel
+              </button>{" "}
+              <button className="">Save</button>{" "}
+            </>
+          ) : null}
         </div>
       ) : null}
       {/* function for deleting customer from db */}
