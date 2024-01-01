@@ -19,17 +19,17 @@ export default function Customers() {
   return (
     <>
       <h1>Customers: </h1>
-      {customers
-        ? customers.map((customer) => {
-            return (
-              <ul>
-                <li>
+      <ul>
+        {customers
+          ? customers.map((customer) => {
+              return (
+                <li key={customer.id}>
                   <Link to={/customers/ + customer.id}>{customer.name}</Link>
                 </li>
-              </ul>
-            );
-          })
-        : null}
+              );
+            })
+          : null}
+      </ul>
     </>
   );
 }

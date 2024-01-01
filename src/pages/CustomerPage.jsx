@@ -23,7 +23,6 @@ export default function CustomerPage() {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         setCustomer(data.customer);
       });
   }, []);
@@ -38,6 +37,29 @@ export default function CustomerPage() {
           <p>{customer.industry}</p>
         </div>
       ) : null}
+      {/* function for deleting customer from db */}
+      <button
+        onClick={() => {
+          const url = baseUrl + "api/customers/" + id;
+          fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Something went wrong");
+              }
+              //if res is okay
+              navigate("/customers");
+            })
+            .catch((e) => console.log(e));
+        }}
+      >
+        Delete
+      </button>
+      <br />
       <Link to="/customers">Go back</Link>
     </>
   );
