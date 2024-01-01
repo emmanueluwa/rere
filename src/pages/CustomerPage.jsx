@@ -16,6 +16,8 @@ export default function CustomerPage() {
   const [notFound, setNotFound] = useState(false);
   const [changed, setChanged] = useState(false);
 
+  const [error, setError] = useState();
+
   /*
   comparing the original to the new values, if the same no api call needs to be made
   - customer vs tempCustomer, object comparison checking name and industry
@@ -40,16 +42,26 @@ export default function CustomerPage() {
     fetch(url)
       .then((res) => {
         if (res.status === 404) {
-          //redirect to 404 page
+          //method1: redirect to 404 page
           navigate("/404");
-          // render 404 component on this page
+          //method2: render 404 component on this page
           // setNotFound(true);
         }
+
+        if (!res.ok) {
+          console.log(res, "response");
+          throw new Error("Something went wrong, please try again later.");
+        }
+
         return res.json();
       })
       .then((data) => {
         setCustomer(data.customer);
         setTempCustomer(data.customer);
+        setError(undefined);
+      })
+      .catch((e) => {
+        setError(e.message);
       });
   }, []);
 
@@ -63,14 +75,19 @@ export default function CustomerPage() {
       body: JSON.stringify(tempCustomer),
     })
       .then((res) => {
+        if (!res.ok) {
+          throw new Error("something went wrong");
+        }
         return res.json();
       })
       .then((data) => {
         setCustomer(data.customer);
         setChanged(false);
-        console.log(data);
+        setError(undefined);
       })
-      .catch();
+      .catch((e) => {
+        setError(e.message);
+      });
   }
 
   return (
@@ -114,30 +131,36 @@ export default function CustomerPage() {
               </button>{" "}
             </>
           ) : null}
+
+          {/* function for deleting customer from db */}
+          <button
+            onClick={() => {
+              const url = baseUrl + "api/customers/" + id;
+              fetch(url, {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((res) => {
+                  if (!res.ok) {
+                    throw new Error("Something went wrong");
+                  }
+                  //if res is okay
+                  setError(undefined);
+                  navigate("/customers");
+                })
+                .catch((e) => {
+                  setError(e.message);
+                });
+            }}
+          >
+            Delete
+          </button>
         </div>
       ) : null}
-      {/* function for deleting customer from db */}
-      <button
-        onClick={() => {
-          const url = baseUrl + "api/customers/" + id;
-          fetch(url, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error("Something went wrong");
-              }
-              //if res is okay
-              navigate("/customers");
-            })
-            .catch((e) => console.log(e));
-        }}
-      >
-        Delete
-      </button>
+      {error ? <p>{error}</p> : null}
+
       <br />
       <Link to="/customers">Go back</Link>
     </>
