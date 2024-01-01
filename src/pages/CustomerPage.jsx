@@ -14,11 +14,12 @@ export default function CustomerPage() {
   const [notFound, setNotFound] = useState(false);
   const [changed, setChanged] = useState(false);
 
-  useEffect(() => {
-    console.log("cus", customer);
-    console.log("tcus", tempCustomer);
-    console.log("changed??:)", changed);
-  });
+  // //testiing state changes
+  // useEffect(() => {
+  //   console.log("cus", customer);
+  //   console.log("tcus", tempCustomer);
+  //   console.log("changed??:)", changed);
+  // });
 
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
@@ -37,6 +38,26 @@ export default function CustomerPage() {
         setTempCustomer(data.customer);
       });
   }, []);
+
+  function updateCustomer() {
+    const url = baseUrl + "api/customers/" + id;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tempCustomer),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setCustomer(data.customer);
+        setChanged(false);
+        console.log(data);
+      })
+      .catch();
+  }
 
   return (
     <>
@@ -74,7 +95,9 @@ export default function CustomerPage() {
               >
                 Cancel
               </button>{" "}
-              <button className="">Save</button>{" "}
+              <button className="" onClick={updateCustomer}>
+                Save
+              </button>{" "}
             </>
           ) : null}
         </div>
