@@ -8,18 +8,32 @@ export default function CustomerPage() {
 
   const [customer, setCustomer] = useState([]);
   //using a copy of the customer to update the customer data
-  const [tempCustomer, setTempCustomer] = useState([]);
+  const [tempCustomer, setTempCustomer] = useState([
+    { name: "", industry: "" },
+  ]);
 
   const navigate = useNavigate();
   const [notFound, setNotFound] = useState(false);
   const [changed, setChanged] = useState(false);
 
-  // //testiing state changes
-  // useEffect(() => {
-  //   console.log("cus", customer);
-  //   console.log("tcus", tempCustomer);
-  //   console.log("changed??:)", changed);
-  // });
+  /*
+  comparing the original to the new values, if the same no api call needs to be made
+  - customer vs tempCustomer, object comparison checking name and industry
+  - using a boolean flag, assume they are equal, check property
+  - - if no match flip the flag and keep "save" and "cancel" buttons
+  - - if match keep flag as equal and hide "save" and "cancel" buttons
+  */
+  useEffect(() => {
+    if (!tempCustomer) return;
+    if (!customer) return;
+
+    let equal = true;
+    if (customer.name !== tempCustomer.name) equal = false;
+
+    if (customer.industry !== tempCustomer.industry) equal = false;
+
+    if (equal) setChanged(false);
+  });
 
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
@@ -87,7 +101,7 @@ export default function CustomerPage() {
           {changed ? (
             <>
               <button
-                className=""
+                className="m-2"
                 onClick={(e) => {
                   setTempCustomer({ ...customer });
                   setChanged(false);
@@ -95,7 +109,7 @@ export default function CustomerPage() {
               >
                 Cancel
               </button>{" "}
-              <button className="" onClick={updateCustomer}>
+              <button className="m-2" onClick={updateCustomer}>
                 Save
               </button>{" "}
             </>
