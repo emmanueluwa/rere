@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { baseUrl } from "../shared";
+import AddCustomer from "../components/AddCustomer";
 
 export default function Customers() {
-  const [customers, setCustomers] = useState();
+  const [customers, setCustomers] = useState([]);
+  const [show, setShow] = useState(false);
+
+  function toggleShow() {
+    setShow(!show);
+  }
 
   useEffect(() => {
     console.log("tests");
@@ -11,10 +17,37 @@ export default function Customers() {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setCustomers(data.customers);
       });
   }, []);
+
+  //adding
+  function addCustomer(name, industry) {
+    const data = { name: name, industry: industry };
+    const url = baseUrl + "api/customers/";
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Something went wrong");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        //assuming addition of customer was successful,
+        //hide modal
+        toggleShow();
+        //update list
+        setCustomers([...customers, data.customer]);
+      })
+      .catch((e) => console.log(e));
+  }
 
   return (
     <>
@@ -30,6 +63,11 @@ export default function Customers() {
             })
           : null}
       </ul>
+      <AddCustomer
+        addCustomer={addCustomer}
+        show={show}
+        toggleShow={toggleShow}
+      />
     </>
   );
 }

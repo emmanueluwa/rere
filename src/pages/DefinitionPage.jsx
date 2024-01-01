@@ -15,7 +15,6 @@ export default function DefinitionPage() {
   /*
   destructure, give an object to component
   */
-  console.log(useParams());
   let { search } = useParams();
 
   useEffect(() => {
