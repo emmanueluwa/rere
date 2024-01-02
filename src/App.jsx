@@ -61,7 +61,7 @@ function App() {
     }
     const minute = 1000 * 60;
     refreshTokens();
-    setInterval(refreshTokens, minute * 3);
+    setInterval(refreshTokens, minute * 15);
   }, []);
 
   return (
