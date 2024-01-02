@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { baseUrl } from "../shared";
 import AddCustomer from "../components/AddCustomer";
+import { LoginContext } from "../App";
 
 export default function Customers() {
+  //checking user is logged in
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -24,6 +28,7 @@ export default function Customers() {
     })
       .then((res) => {
         if (res.status === 401) {
+          setLoggedIn(false);
           navigate("/login", {
             state: {
               //go back to this page after successful login
@@ -46,6 +51,7 @@ export default function Customers() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access"),
       },
       body: JSON.stringify(data),
     })

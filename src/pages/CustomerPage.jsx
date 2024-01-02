@@ -1,9 +1,11 @@
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { baseUrl } from "../shared";
 import NotFoundPage from "./NotFoundPage";
+import { LoginContext } from "../App";
 
 export default function CustomerPage() {
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
   const { id } = useParams();
 
   const [customer, setCustomer] = useState([]);
@@ -54,6 +56,7 @@ export default function CustomerPage() {
           //method2: render 404 component on this page
           setNotFound(true);
         } else if (res.status === 401) {
+          setLoggedIn(false);
           navigate("/login", {
             state: {
               //go back to this page after successful login
@@ -92,6 +95,8 @@ export default function CustomerPage() {
     })
       .then((res) => {
         if (res.status === 401) {
+          setLoggedIn(false);
+
           navigate("/login", {
             state: {
               //go back to this page after successful login
@@ -199,6 +204,8 @@ export default function CustomerPage() {
                 })
                   .then((res) => {
                     if (res.status === 401) {
+                      setLoggedIn(false);
+
                       navigate("/login", {
                         state: {
                           //go back to this page after successful login
