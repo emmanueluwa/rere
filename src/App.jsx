@@ -9,6 +9,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 
 import Header from "./components/Header";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
 
           <Route path="/dictionary" element={<DictionaryPage />} />
           <Route path="/dictionary/:search" element={<DefinitionPage />} />
+
+          <Route path="/login" element={<LoginPage />} />
+
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

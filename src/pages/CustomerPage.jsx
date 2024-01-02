@@ -46,6 +46,8 @@ export default function CustomerPage() {
           // navigate("/404");
           //method2: render 404 component on this page
           setNotFound(true);
+        } else if (res.status === 401) {
+          navigate("/login");
         }
 
         if (!res.ok) {

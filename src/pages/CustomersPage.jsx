@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { baseUrl } from "../shared";
 import AddCustomer from "../components/AddCustomer";
 
 export default function Customers() {
+  const navigate = useNavigate();
+
   const [customers, setCustomers] = useState([]);
   const [show, setShow] = useState(false);
 
@@ -15,7 +17,12 @@ export default function Customers() {
     console.log("tests");
     const url = baseUrl + "api/customers/";
     fetch(url)
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+        }
+        return res.json();
+      })
       .then((data) => {
         setCustomers(data.customers);
       });
