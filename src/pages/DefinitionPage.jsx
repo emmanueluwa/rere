@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import NotFoundPage from "./NotFoundPage";
 import DefinitionSearch from "../components/DefinitionSearch";
@@ -11,6 +11,7 @@ export default function DefinitionPage() {
   const [error, setError] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   /*
   destructure, give an object to component
@@ -23,7 +24,12 @@ export default function DefinitionPage() {
         if (res.status === 404) {
           setNotFound(true);
         } else if (res.status === 401) {
-          navigate("/login");
+          navigate("/login", {
+            state: {
+              //go back to this page after successful login
+              previousUrl: location.pathname,
+            },
+          });
         } else if (res.status === 500) {
           setError(true);
         }

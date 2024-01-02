@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { baseUrl } from "../shared";
 import AddCustomer from "../components/AddCustomer";
 
 export default function Customers() {
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [customers, setCustomers] = useState([]);
@@ -14,12 +15,21 @@ export default function Customers() {
   }
 
   useEffect(() => {
-    console.log("tests");
     const url = baseUrl + "api/customers/";
-    fetch(url)
+    fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access"),
+      },
+    })
       .then((res) => {
         if (res.status === 401) {
-          navigate("/login");
+          navigate("/login", {
+            state: {
+              //go back to this page after successful login
+              previousUrl: location.pathname,
+            },
+          });
         }
         return res.json();
       })

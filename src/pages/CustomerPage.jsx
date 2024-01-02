@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../shared";
 import NotFoundPage from "./NotFoundPage";
@@ -13,6 +13,8 @@ export default function CustomerPage() {
   ]);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [notFound, setNotFound] = useState(false);
   const [changed, setChanged] = useState(false);
 
@@ -39,7 +41,12 @@ export default function CustomerPage() {
 
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
-    fetch(url)
+    fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access"),
+      },
+    })
       .then((res) => {
         if (res.status === 404) {
           //method1: redirect to 404 page
@@ -47,7 +54,12 @@ export default function CustomerPage() {
           //method2: render 404 component on this page
           setNotFound(true);
         } else if (res.status === 401) {
-          navigate("/login");
+          navigate("/login", {
+            state: {
+              //go back to this page after successful login
+              previousUrl: location.pathname,
+            },
+          });
         }
 
         if (!res.ok) {
@@ -74,10 +86,20 @@ export default function CustomerPage() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access"),
       },
       body: JSON.stringify(tempCustomer),
     })
       .then((res) => {
+        if (res.status === 401) {
+          navigate("/login", {
+            state: {
+              //go back to this page after successful login
+              previousUrl: location.pathname,
+            },
+          });
+        }
+
         if (!res.ok) {
           throw new Error("something went wrong");
         }
@@ -172,9 +194,19 @@ export default function CustomerPage() {
                   method: "DELETE",
                   headers: {
                     "Content-Type": "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("access"),
                   },
                 })
                   .then((res) => {
+                    if (res.status === 401) {
+                      navigate("/login", {
+                        state: {
+                          //go back to this page after successful login
+                          previousUrl: location.pathname,
+                        },
+                      });
+                    }
+
                     if (!res.ok) {
                       throw new Error("Something went wrong");
                     }

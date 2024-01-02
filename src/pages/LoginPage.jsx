@@ -1,9 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../shared";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  /*
+  takes information passed here on customersPage.jsx: 
+  navigate("/login", {
+            state: {
+              previousUrl: "/customers",
+            },
+          });
+   */
+  const location = useLocation();
+  const navigate = useNavigate();
 
   function login(e) {
     e.preventDefault();
@@ -20,7 +32,14 @@ export default function LoginPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data, " <-> from login post");
+        localStorage.setItem("access", data.access);
+        localStorage.setItem("refresh", data.refresh);
+
+        navigate(
+          location?.state?.previousUrl
+            ? location.state.previousUrl
+            : "/customers"
+        );
       })
       .catch();
   }
