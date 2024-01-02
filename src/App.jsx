@@ -1,5 +1,6 @@
 import "./index.css";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
+import { baseUrl } from "./shared";
 
 import InfluencersPage from "./pages/InfluencersPage";
 import CustomersPage from "./pages/CustomersPage";
@@ -16,10 +17,6 @@ import LoginPage from "./pages/LoginPage";
 export const LoginContext = createContext();
 
 function App() {
-  /* check local storage for an access token
-     - could be expired
-     - SOLUTION: use refresh token, works? stay logged in : send to "/login"
-  */
   const [loggedIn, setLoggedIn] = useState(localStorage.access ? true : false);
 
   //clear local storage whenever loggedIn === false
@@ -31,6 +28,41 @@ function App() {
       localStorage.clear();
     }
   }
+
+  /* check local storage for an access token
+     - could be expired
+     - SOLUTION: use refresh token, works? stay logged in : send to "/login"
+  */
+
+  /* 
+  loop that executes ever couple of mins to get new access and refresh tokens
+  - okay as long as this happens more often than the access token expires 
+  */
+  useEffect(() => {
+    function refreshTokens() {
+      if (localStorage.refresh) {
+        const url = baseUrl + "api/token/refresh/";
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            refresh: localStorage.refresh,
+          }),
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            localStorage.access = data.access;
+            localStorage.refresh = data.refresh;
+            setLoggedIn(true);
+          });
+      }
+    }
+    const minute = 1000 * 60;
+    refreshTokens();
+    setInterval(refreshTokens, minute * 3);
+  }, []);
 
   return (
     <LoginContext.Provider value={[loggedIn, changeLoggedIn]}>
