@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { baseUrl } from "../shared";
 import AddCustomer from "../components/AddCustomer";
 import { LoginContext } from "../App";
+import useFetch from "../hooks/useFetch";
 
 export default function Customers() {
   //checking user is logged in
@@ -11,13 +12,27 @@ export default function Customers() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [customers, setCustomers] = useState([]);
+  // const [customers, setCustomers] = useState([]);
   const [show, setShow] = useState(false);
 
   function toggleShow() {
     setShow(!show);
   }
 
+  const url = baseUrl + "api/customers/";
+  const { data: { customers } = {}, errorStatus } = useFetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("access"),
+    },
+  });
+
+  useEffect(() => {
+    console.log(customers, "<--- DATA", errorStatus, "<<__Error!");
+  });
+
+  /* 
   useEffect(() => {
     const url = baseUrl + "api/customers/";
     fetch(url, {
@@ -42,9 +57,12 @@ export default function Customers() {
         setCustomers(data.customers);
       });
   }, []);
+  */
 
-  //adding
+  //adding a new customer
   function addCustomer(name, industry) {
+    /* 
+
     const data = { name: name, industry: industry };
     const url = baseUrl + "api/customers/";
     fetch(url, {
@@ -70,6 +88,7 @@ export default function Customers() {
         setCustomers([...customers, data.customer]);
       })
       .catch((e) => console.log(e));
+  */
   }
 
   return (
