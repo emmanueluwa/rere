@@ -20,7 +20,17 @@ export default function Customers() {
   }
 
   const url = baseUrl + "api/customers/";
-  const { data: { customers } = {}, errorStatus } = useFetch(url, {
+  /*
+  request=> original function to get data
+  appendData=> new data to append
+  - functions that will be returned from useFetch
+  */
+  const {
+    request,
+    appendData,
+    data: { customers } = {},
+    errorStatus,
+  } = useFetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -29,66 +39,29 @@ export default function Customers() {
   });
 
   useEffect(() => {
-    console.log(customers, "<--- DATA", errorStatus, "<<__Error!");
-  });
-
-  /* 
-  useEffect(() => {
-    const url = baseUrl + "api/customers/";
-    fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("access"),
-      },
-    })
-      .then((res) => {
-        if (res.status === 401) {
-          setLoggedIn(false);
-          navigate("/login", {
-            state: {
-              //go back to this page after successful login
-              previousUrl: location.pathname,
-            },
-          });
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setCustomers(data.customers);
-      });
+    request();
   }, []);
-  */
+
+  // useEffect(() => {
+  //   console.log(
+  //     request,
+  //     "<--- req",
+  //     appendData,
+  //     "<<apData!",
+  //     customers,
+  //     "<--- DATA",
+  //     errorStatus,
+  //     "<<__Error!"
+  //   );
+  // });
 
   //adding a new customer
   function addCustomer(name, industry) {
-    /* 
+    appendData({ name: name, industry: industry });
 
-    const data = { name: name, industry: industry };
-    const url = baseUrl + "api/customers/";
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("access"),
-      },
-      body: JSON.stringify(data),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Something went wrong");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        //assuming addition of customer was successful,
-        //hide modal
-        toggleShow();
-        //update list
-        setCustomers([...customers, data.customer]);
-      })
-      .catch((e) => console.log(e));
-  */
+    if (!errorStatus) {
+      toggleShow();
+    }
   }
 
   return (

@@ -19,10 +19,24 @@ export default function DefinitionPage() {
   */
   let { search } = useParams();
 
-  //custom hook
-  const [word, errorStatus] = useFetch(
-    "https://api.dictionaryapi.dev/api/v2/entries/en/" + search
-  );
+  /* 
+  custom hook
+  - structure of the data word[0].meanings
+  - - grab meaning and rename it to word { meanings: word}
+  - - [{ meanings: word }] inside aray to get [0]
+  - - assign to empty array with empty object => [{}] default value for initial useEffect
+  - - - useFetch does not return values immidiately
+  */
+
+  const {
+    request,
+    data: [{ meanings: word }] = [{}],
+    errorStatus,
+  } = useFetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + search);
+
+  useEffect(() => {
+    request();
+  }, []);
 
   if (errorStatus === 404) {
     return (
@@ -44,10 +58,10 @@ export default function DefinitionPage() {
 
   return (
     <>
-      {word?.[0]?.meanings ? (
+      {word ? (
         <>
           <h1>Here is a definition: </h1>
-          {word[0].meanings.map((meaning) => {
+          {word.map((meaning) => {
             return (
               <p key={uuidv4()}>
                 {meaning.partOfSpeech}: {meaning.definitions[0].definition}
