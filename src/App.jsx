@@ -13,6 +13,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Header from "./components/Header";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 export const LoginContext = createContext();
 
@@ -77,6 +78,7 @@ function App() {
             <Route path="/dictionary/:search" element={<DefinitionPage />} />
 
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
             <Route path="/404" element={<NotFoundPage />} />
             <Route path="*" element={<NotFoundPage />} />
